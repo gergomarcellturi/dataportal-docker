@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+
+  postgresql:
+    image: postgres:11
+    env_file:
+      - ./postgresql/postgres.env
+    environment:
+      TZ: "Europe/Budapest"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 512mb
+    ports:
+      - 8132:5432
+    restart: "no"
+    volumes:
+      - dataportal-volume:/var/lib/postgresql/data/pgdata
+      - ./postgresql/initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  dataportal-volume:
+    external: true
+
+networks:
+  default:
+    external:
+      name: dataportal-network
